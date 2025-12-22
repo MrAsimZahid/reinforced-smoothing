@@ -1,0 +1,31 @@
+data:
+  domain_max: 6.283185307179586
+  domain_min: 0
+  n_train_points: 40
+  noise_std: 0.2
+  seed: 42
+loss:
+  derivative_order: 2
+  smoothness_weights:
+  - 0.0
+  - 0.001
+  - 0.01
+model:
+  activation: tanh
+  hidden_layers:
+  - 32
+  - 32
+  - 32
+output:
+  results_dir: results
+  save_logs: true
+  save_models: true
+training:
+  epochs: 5000
+  learning_rate: 0.01
+  verbose_interval: 1000
+visualization:
+  dpi: 300
+  figure_format: png
+  n_test_points: 200
+  save_figures: true

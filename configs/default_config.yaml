@@ -1,0 +1,31 @@
+# Data configuration
+data:
+  n_train_points: 40
+  noise_std: 0.2
+  domain_min: 0
+  domain_max: 6.283185  # 2*pi
+  seed: 42
+
+# Model configuration
+model:
+  hidden_layers: [32, 32, 32]
+  activation: "tanh"
+
+# Loss configuration
+loss:
+  smoothness_weight: 0.01
+  derivative_order: 2
+
+# Training configuration
+training:
+  learning_rate: 0.01
+  epochs: 5000
+  batch_size: null  # Use all data
+  optimizer: "adam"
+  
+# Visualization configuration
+visualization:
+  n_test_points: 200
+  save_figures: true
+  figure_format: "png"
+  dpi: 300

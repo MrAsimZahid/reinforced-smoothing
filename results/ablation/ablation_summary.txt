@@ -1,0 +1,34 @@
+======================================================================
+ABLATION STUDY SUMMARY
+======================================================================
+
+1. NETWORK DEPTH
+----------------------------------------------------------------------
+1 layer (16 neurons)           Test MSE: 0.009677
+2 layers (32 each)             Test MSE: 0.009981
+3 layers (32 each)             Test MSE: 0.010934
+4 layers (32 each)             Test MSE: 0.009731
+2 layers (64 each)             Test MSE: 0.009183
+
+2. ACTIVATION FUNCTIONS
+----------------------------------------------------------------------
+Tanh                           Test MSE: 0.009719
+ReLU                           Test MSE: 0.015633
+ELU                            Test MSE: 0.009110
+Sigmoid                        Test MSE: 0.009987
+
+3. DERIVATIVE ORDERS
+----------------------------------------------------------------------
+No smoothness                  Test MSE: 0.024900
+1st derivative penalty         Test MSE: 0.016823
+2nd derivative penalty         Test MSE: 0.010010
+
+4. LAMBDA SENSITIVITY
+----------------------------------------------------------------------
+λ = 0.0000  Train: 0.015563  Test: 0.018889
+λ = 0.0001  Train: 0.023157  Test: 0.013207
+λ = 0.0010  Train: 0.023576  Test: 0.013547
+λ = 0.0050  Train: 0.024936  Test: 0.010792
+λ = 0.0100  Train: 0.025690  Test: 0.010343
+λ = 0.0500  Train: 0.029766  Test: 0.012312
+λ = 0.1000  Train: 0.034810  Test: 0.017998
