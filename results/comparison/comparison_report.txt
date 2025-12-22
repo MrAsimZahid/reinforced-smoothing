@@ -1,0 +1,65 @@
+======================================================================
+METHOD COMPARISON REPORT
+======================================================================
+
+
+LOSS FUNCTION
+----------------------------------------------------------------------
+1. Physics-Informed (PDE)
+   Test MSE: 0.008608
+   Training Time: 5.15s
+
+2. Curvature Loss
+   Test MSE: 0.011156
+   Training Time: 4.27s
+
+3. Smoothness (2nd order)
+   Test MSE: 0.011220
+   Training Time: 5.70s
+
+4. Total Variation
+   Test MSE: 0.016631
+   Training Time: 3.06s
+
+
+ARCHITECTURE
+----------------------------------------------------------------------
+1. Standard MLP
+   Test MSE: 0.009325
+   Training Time: 3.94s
+
+2. Adaptive Depth
+   Test MSE: 0.009824
+   Training Time: 25.04s
+
+3. Residual Network
+   Test MSE: 0.010064
+   Training Time: 11.66s
+
+4. Fourier Features
+   Test MSE: 0.034094
+   Training Time: 29.05s
+
+
+UNCERTAINTY
+----------------------------------------------------------------------
+1. Ensemble
+   Test MSE: 0.009837
+
+2. Standard (No Uncertainty)
+   Test MSE: 0.010245
+
+3. MC Dropout
+   Test MSE: 0.013173
+
+4. Bayesian NN
+   Test MSE: 0.052428
+
+
+======================================================================
+CONCLUSION
+======================================================================
+
+Best Overall Method: Physics-Informed (PDE)
+Category: Loss Function
+Test MSE: 0.008608
