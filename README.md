@@ -98,7 +98,8 @@ Compares different smoothness penalties (λ = 0, 0.001, 0.01):
 python experiments/basic_experiment.py
 ```
 
-**Output**: 
+**Output**:
+
 - Trained models with different λ values
 - Comparison visualizations
 - Training logs and metrics
@@ -112,6 +113,7 @@ python experiments/ablation_study.py
 ```
 
 **Tests**:
+
 - Network depth (1-4 layers)
 - Activation functions (Tanh, ReLU, ELU, Sigmoid)
 - Derivative orders (1st vs 2nd)
@@ -126,6 +128,7 @@ python experiments/comparison_study.py
 ```
 
 **Compares**:
+
 - Loss functions (Smoothness, Curvature, TV, Physics-Informed)
 - Architectures (MLP, ResNet, Fourier Features, Adaptive)
 - Uncertainty methods (Bayesian, MC Dropout, Ensemble)
@@ -163,27 +166,77 @@ python experiments/comparison_study.py
 
 ## 📈 Results
 
-### Smoothness Comparison
+Our experiments systematically evaluated smoothing strategies, loss functions, neural architectures, and uncertainty methods for fitting noisy data. Below are the key findings.
 
-With λ = 0.01, models achieve:
-- **Test MSE**: ~0.04 (vs 0.06 without smoothing)
-- **Smoothness**: 70% reduction in derivative variance
-- **Generalization**: Better extrapolation beyond training domain
+### Summary of the Best Results
 
-### Uncertainty Quantification
+| Category         | Winner                     | Test MSE | Why?                                                   |
+|------------------|----------------------------|----------|--------------------------------------------------------|
+| Smoothing        | Strong (&lambda; = 0.01)   | 0.0107   | Filters out noise effectively.                         |
+| Activation       | Sigmoid                    | 0.0100   | Matches the smooth nature of the target.               |
+| Uncertainty      | Ensemble                   | 0.0098   | Averaging cancels out individual errors.               |
+| Loss Function    | Physics-Informed           | 0.0006   | Uses domain knowledge (equations) to guide training.   |
 
-Bayesian methods provide:
-- **Calibrated uncertainty** in data-sparse regions
-- **Confidence intervals** for predictions
-- **Risk-aware** decision making
+### 📉 Smoothness Regularization
 
-### Architecture Comparison
+Adding a **2nd-derivative smoothness penalty** significantly improves generalization, especially for noisy data.
 
-| Architecture | Test MSE | Training Time | Parameters |
-|--------------|----------|---------------|------------|
-| Standard MLP | 0.0412 | 3.2s | 3.1K |
-| ResNet | 0.0398 | 4.1s | 4.8K |
-| Fourier Features | 0.0365 | 4.5s | 5.2K |
+| Smoothing Level (λ) | Train MSE | Test MSE | Improvement Over No Smoothing |
+|---------------------|-----------|----------|--------------------------------|
+| No Smoothing (λ=0)  | 0.0113    | 0.0255   | –                              |
+| Light (λ=0.001)     | 0.0212    | 0.0128   | ~50% reduction in test error   |
+| **Strong (λ=0.01)** | **0.0258**| **0.0107**| **~58% reduction in test error** |
+
+**Key Insight:** A small increase in training error (due to smoothing) leads to a large drop in test error, confirming reduced overfitting.
+
+### 📊 Loss Function Comparison
+
+The **Physics-Informed (PDE) loss** achieved the best test performance, balancing data fidelity and physical consistency.
+
+| Loss Function        | Test MSE  | Training Time |
+|----------------------|-----------|---------------|
+| **Physics-Informed** | **0.0086**| 5.15s         |
+| Curvature Loss       | 0.0112    | 4.27s         |
+| Smoothness (2nd)     | 0.0112    | 5.70s         |
+| Total Variation      | 0.0166    | 3.06s         |
+
+### 🏗️ Architecture Comparison
+
+**Standard MLPs** provide the best balance of accuracy and efficiency. More complex architectures did not yield proportional gains for this task.
+
+| Architecture       | Test MSE  | Training Time |
+|--------------------|-----------|---------------|
+| **Standard MLP**   | **0.0093**| **3.94s**     |
+| Adaptive Depth     | 0.0098    | 25.04s        |
+| Residual Network   | 0.0101    | 11.66s        |
+| Fourier Features   | 0.0341    | 29.05s        |
+
+### 🔍 Uncertainty Quantification
+
+**Ensemble methods** provided the most reliable uncertainty estimates without sacrificing predictive accuracy.
+
+| Method            | Test MSE  |
+|-------------------|-----------|
+| **Ensemble**      | **0.0098**|
+| Standard (None)   | 0.0102    |
+| MC Dropout        | 0.0132    |
+| Bayesian NN       | 0.0524    |
+
+### ⚙️ Ablation Insights
+
+- **Optimal Network:** 2 layers with 64 neurons each performed best (Test MSE: `0.0092`)
+- **Best Activation:** ELU slightly outperformed Tanh (Test MSE: `0.0091` vs `0.0097`)
+- **Smoothness Order:** Penalizing the **2nd derivative** was most effective (Test MSE: `0.0100`)
+- **Lambda Sensitivity:** The regularization strength `λ = 0.01` offered the best trade-off between train and test error
+
+### 🏆 Overall Best Performing Method
+
+**Physics-Informed Neural Network (PINN)** with PDE-based loss.
+
+- **Test MSE:** `0.008608`
+- **Advantage:** Embodies domain knowledge directly into the loss, leading to superior generalization and physical plausibility
+
+> **Conclusion:** For fitting noisy, potentially physics-governed data, a **standard MLP trained with a Physics-Informed loss and moderate 2nd-order smoothing (λ ≈ 0.01)** provides an excellent blend of accuracy, speed, and generalization. Ensemble methods are recommended for robust uncertainty estimates.
 
 ## 🎨 Visualization Examples
 
@@ -194,6 +247,21 @@ The project generates publication-quality visualizations:
 3. **Derivative Analysis**: Smoothness characteristics
 4. **Uncertainty Bands**: Confidence intervals
 5. **Ablation Results**: Component-wise performance
+
+<p align="left">
+  <img src="reinforced_smoothing_results.png" width="600">
+  <img src="derivative_analysis.png" width="600">
+</p>
+
+### Ablation Results
+
+<p align="left">
+  <img src="results/ablation/activation_functions.png" width="600">
+  <img src="results/ablation/derivative_orders.png" width="600">
+  <img src="results/ablation/lambda_sensitivity.png" width="600">
+  <img src="results/ablation/network_depth.png" width="600">
+</p>
+
 
 ## 🔧 Configuration
 
@@ -304,6 +372,7 @@ This project is licensed under the MIT License - see LICENSE file for details.
 
 ## 🙏 Acknowledgments
 
+- Dr. Haifeng Wang for inspiration and posting the challenge
 - PyTorch team for the excellent framework
 - Scientific ML community for inspiration
 - Physics-Informed Neural Networks (PINNs) literature
@@ -311,7 +380,7 @@ This project is licensed under the MIT License - see LICENSE file for details.
 ## 📞 Contact
 
 - **Author**: Asim Zahid
-- **Email**: asimzahid02@gmail.com
+- **Email**: <asimzahid02@gmail.com>
 - **GitHub**: [@MrAsimZahid](https://github.com/MrAsimZahid)
 
 ## 🔗 Related Projects
